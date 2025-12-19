@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Emoji 😜</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+<canvas id="pinkboard"></canvas>
+
+<script>
+/* SETTINGS */
+var settings = {
+  particles: {
+    length: 1500,
+    duration: 2,
+    velocity: 120,
+    effect: -1.2,
+    size: 22
+  }
+};
+
+/* REQUEST ANIMATION FRAME */
+(function () {
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+  }
+  window.requestAnimationFrame = window.requestAnimationFrame ||
+    function (callback) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function () { callback(currTime + timeToCall); }, timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
+})();
+
+/* POINT */
+function Point(x, y) {
+  this.x = x || 0;
+  this.y = y || 0;
+}
+Point.prototype.clone = function () {
+  return new Point(this.x, this.y);
+};
+Point.prototype.length = function (l) {
+  if (!l) return Math.sqrt(this.x * this.x + this.y * this.y);
+  this.normalize();
+  this.x *= l;
+  this.y *= l;
+  return this;
+};
+Point.prototype.normalize = function () {
+  var l = this.length();
+  this.x /= l;
+  this.y /= l;
+  return this;
+};
+
+/* PARTICLE */
+function Particle() {
+  this.position = new Point();
+  this.velocity = new Point();
+  this.acceleration = new Point();
+  this.age = 0;
+}
+Particle.prototype.initialize = function (x, y, dx, dy) {
+  this.position.x = x;
+  this.position.y = y;
+  this.velocity.x = dx;
+  this.velocity.y = dy;
+  this.acceleration.x = dx * settings.particles.effect;
+  this.acceleration.y = dy * settings.particles.effect;
+  this.age = 0;
+};
+Particle.prototype.update = function (dt) {
+  this.position.x += this.velocity.x * dt;
+  this.position.y += this.velocity.y * dt;
+  this.velocity.x += this.acceleration.x * dt;
+  this.velocity.y += this.acceleration.y * dt;
+  this.age += dt;
+};
+Particle.prototype.draw = function (ctx, img) {
+  var size = img.width;
+  ctx.globalAlpha = 1 - this.age / settings.particles.duration;
+  ctx.drawImage(img, this.position.x - size / 2, this.position.y - size / 2);
+};
+
+/* PARTICLE POOL */
+function ParticlePool(length) {
+  this.particles = new Array(length);
+  for (var i = 0; i < length; i++) this.particles[i] = new Particle();
+  this.firstActive = 0;
+  this.firstFree = 0;
+  this.duration = settings.particles.duration;
+}
+ParticlePool.prototype.add = function (x, y, dx, dy) {
+  this.particles[this.firstFree].initialize(x, y, dx, dy);
+  this.firstFree = (this.firstFree + 1) % this.particles.length;
+  if (this.firstActive === this.firstFree)
+    this.firstActive = (this.firstActive + 1) % this.particles.length;
+};
+ParticlePool.prototype.update = function (dt) {
+  while (this.particles[this.firstActive].age >= this.duration &&
+         this.firstActive !== this.firstFree) {
+    this.firstActive = (this.firstActive + 1) % this.particles.length;
+  }
+  for (var i = this.firstActive; i !== this.firstFree; i = (i + 1) % this.particles.length) {
+    this.particles[i].update(dt);
+  }
+};
+ParticlePool.prototype.draw = function (ctx, img) {
+  for (var i = this.firstActive; i !== this.firstFree; i = (i + 1) % this.particles.length) {
+    this.particles[i].draw(ctx, img);
+  }
+};
+
+/* MAIN */
+(function (canvas) {
+  var ctx = canvas.getContext("2d");
+  var pool = new ParticlePool(settings.particles.length);
+  var rate = settings.particles.length / settings.particles.duration;
+  var time;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.onresize = resize;
+  resize();
+
+  /* EMOJI IMAGE */
+  var emojiImage = (function () {
+    var c = document.createElement("canvas");
+    var cctx = c.getContext("2d");
+    c.width = settings.particles.size * 2;
+    c.height = settings.particles.size * 2;
+    cctx.font = settings.particles.size * 2 + "px serif";
+    cctx.textAlign = "center";
+    cctx.textBaseline = "middle";
+    cctx.fillText("😜", c.width / 2, c.height / 2);
+    var img = new Image();
+    img.src = c.toDataURL();
+    return img;
+  })();
+
+  function render() {
+    requestAnimationFrame(render);
+    var now = new Date().getTime() / 1000;
+    var dt = now - (time || now);
+    time = now;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    var amount = rate * dt;
+    for (var i = 0; i < amount; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      var pos = new Point(Math.cos(angle), Math.sin(angle)).length(10);
+      var dir = pos.clone().length(settings.particles.velocity);
+      pool.add(
+        canvas.width / 2 + pos.x,
+        canvas.height / 2 + pos.y,
+        dir.x,
+        dir.y
+      );
+    }
+
+    pool.update(dt);
+    pool.draw(ctx, emojiImage);
+  }
+
+  render();
+})(document.getElementById("pinkboard"));
+</script>
+
+</body>
+</html>
