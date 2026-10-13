@@ -1,193 +1,424 @@
-<!DOCTYPE HTML>
-<html>
+```html
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Emoji 😜</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-    }
-    canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-  </style>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>luv the🤓</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap');
 
+:root {
+  --ink:#201a32;
+  --pink:#ff75b9;
+  --purple:#9675ff;
+  --yellow:#ffe66d;
+  --cyan:#75edff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:4px solid var(--cyan);outline-offset:4px}
+.screen{display:none;min-height:100vh;padding:30px 16px 60px;position:relative;overflow:hidden}
+.screen.active{display:block;animation:appear .5s ease}
+.wrap{width:min(800px,100%);margin:auto;position:relative;z-index:2}
+.pixel{font-family:'Press Start 2P',monospace;line-height:1.8}
+.small{font-size:10px}
+.muted{opacity:.72}
+.btn{border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:12px;padding:12px 17px;font-weight:900;transition:.15s;max-width:100%}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+.panel{background:#ffffffd9;border:3px solid var(--ink);border-radius:22px;padding:22px;box-shadow:7px 7px 0 #201a32}
+h1{font-size:clamp(25px,6vw,46px);line-height:1.3;margin:15px 0}
+h2{font-size:clamp(20px,4vw,30px);line-height:1.4}
+p{line-height:1.7}
+#s1{background:linear-gradient(135deg,#ffb9d9,#fff0a6 48%,#a5f1ff)}
+#s2{background:linear-gradient(145deg,#b7f4ff,#c7b5ff 50%,#ffc7e8)}
+#s3{background:radial-gradient(circle at 50% 40%,#433079,#140f29 70%);color:white;text-align:center}
+#s4{background:linear-gradient(135deg,#ffed9b,#ffb5cf,#c8b8ff);text-align:center}
+#s5{background:#050509;color:#fff;text-align:center}
+.decor{position:absolute;pointer-events:none;opacity:.65;z-index:0}
+.float{animation:float 3s ease-in-out infinite}
+.spin{animation:spin 8s linear infinite}
+@keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{50%{transform:translateY(-13px) rotate(5deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+@keyframes pop{0%{transform:scale(.1) rotate(-15deg);opacity:0}70%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1);opacity:1}}
+@keyframes glow{50%{filter:drop-shadow(0 0 25px #ff72b6) drop-shadow(0 0 50px #ff334e)}}
+@keyframes orbit{from{transform:rotate(0deg) translateX(75px) rotate(0deg)}to{transform:rotate(360deg) translateX(75px) rotate(-360deg)}}
+@keyframes lantern{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes rain{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes heartBeat{0%,100%{transform:rotate(-45deg) scale(1)}50%{transform:rotate(-45deg) scale(1.1)}}
+@keyframes flash{0%,100%{opacity:0}50%{opacity:1}}
+@keyframes marquee{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+
+.emojiRain{position:fixed;z-index:20;pointer-events:none;animation:rain 3s linear forwards}
+.lantern{position:absolute;top:15px;font-size:42px;animation:lantern 2s ease-in-out infinite;filter:drop-shadow(0 0 10px #ff8b36)}
+.lantern.left{left:6%}.lantern.right{right:6%;animation-delay:.5s}
+#gift{font-size:64px;border:0;background:none;filter:drop-shadow(3px 4px 0 #222);animation:float 1s infinite}
+.quizQ{font-size:clamp(17px,4vw,23px);font-weight:900;margin:18px 0}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.answer{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:13px 8px;font-weight:900}
+.answer:hover{background:#fff1a8;transform:scale(1.02)}
+.answer.correct{background:#a8ffcf}
+.answer.wrong{background:#ffb0b0;animation:shake .25s}
+.progress{height:12px;background:#ffffff88;border:2px solid var(--ink);border-radius:20px;overflow:hidden}
+#bar{height:100%;width:0;background:linear-gradient(90deg,#ff75b9,#9675ff,#75edff);transition:width .3s}
+.heart{position:relative;width:90px;height:90px;margin:35px auto;background:#ff315d;transform:rotate(-45deg);animation:heartBeat 1s infinite,glow 1.3s infinite}
+.heart:before,.heart:after{content:"";position:absolute;width:90px;height:90px;background:#ff315d;border-radius:50%}
+.heart:before{top:-45px;left:0}
+.heart:after{left:45px;top:0}
+.heartGlow{filter:drop-shadow(0 0 15px #ff4f86) drop-shadow(0 0 40px #ff234e)}
+#boss{font-size:clamp(100px,25vw,180px);display:inline-block;filter:drop-shadow(5px 8px 0 #4d318d);animation:float 2s infinite}
+.bossPanel{background:#fff8e5;border:4px solid #201a32;border-radius:24px;padding:24px;box-shadow:8px 8px 0 #201a32}
+#noBtn{background:#ffb0b0}
+#angry{font-size:65px;display:none;animation:shake .25s infinite}
+#finalMessage{font-size:clamp(20px,4.5vw,38px);line-height:1.8;color:#ffe6a5;text-shadow:0 0 15px #ff5378,0 0 35px #ff5378}
+.luvOrbit{position:absolute;left:50%;top:50%;white-space:nowrap;color:#ff82bd;font-family:'Press Start 2P',monospace;font-size:12px;animation:orbit 5s linear infinite;text-shadow:0 0 12px #ff68b0}
+.pixelLantern{display:inline-block;font-size:48px;image-rendering:pixelated;animation:lantern 1.5s infinite}
+.stamp{display:inline-block;border:3px solid #d43e3e;color:#d43e3e;padding:5px 8px;transform:rotate(-8deg);font-weight:900}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#201a32;color:white;padding:12px 17px;border-radius:12px;z-index:100;display:none;max-width:90vw;text-align:center}
+@media(max-width:480px){.panel{padding:17px}.answers{grid-template-columns:1fr}.screen{padding-top:25px}.lantern{font-size:32px}}
+</style>
+</head>
 <body>
-<canvas id="pinkboard"></canvas>
+
+<!-- LAYER 1: CHAOTIC 🤓 WEBSITE -->
+<section id="s1" class="screen active">
+  <span class="decor float" style="top:10%;left:5%;font-size:45px">🤓</span>
+  <span class="decor spin" style="top:18%;right:8%;font-size:35px">⭐</span>
+  <span class="decor float" style="bottom:12%;left:8%;font-size:40px">🫵🏼</span>
+  <span class="decor spin" style="bottom:20%;right:7%;font-size:40px">💥</span>
+  <div class="wrap">
+    <div class="pixel small">WELCOME TO THE INTERNET</div>
+    <h1>🤓 THIS WEBSITE IS ABOUT U 🫵🏼</h1>
+    <p>100% useless. 0% normal. Made with questionable intentions.</p>
+    <div class="panel" style="background:#fff9c9">
+      <div class="pixel small">USER SCANNER</div>
+      <h2 id="scanText">Scanning u...</h2>
+      <div class="progress"><div id="scanBar" style="height:100%;width:0;background:#ff75b9"></div></div>
+      <p id="scanResult">Please remain suspicious.</p>
+      <button class="btn" style="background:#ff9bd0" onclick="scan()">SCAN U AGAIN 🤓</button>
+    </div>
+
+    <h2>Choose your totally real activity:</h2>
+    <div class="btnrow">
+      <button class="btn" style="background:#9df4ff" onclick="toast('Congratulations, u have achieved absolutely nothing.')">🏆 Achievements</button>
+      <button class="btn" style="background:#ffe66d" onclick="toast('Your brain.exe is not responding 🤓')">🧠 Brain test</button>
+      <button class="btn" style="background:#c5b0ff" onclick="toast('Error 404: social skills not found.')">💻 Computer</button>
+      <button class="btn" style="background:#ffb7d9" onclick="toast('Congratulations, u are now an unpaid Temu employee.')">📦 Free gift</button>
+      <button class="btn" style="background:#baffc9" onclick="toast('u have been promoted to professional button clicker.')">🕹️ Job simulator</button>
+    </div>
+
+    <div class="panel" style="margin-top:30px;background:#fff">
+      <span class="pixel small">⚠️ CLASSIFIED GAME ⚠️</span>
+      <h2>The extremely suspicious door</h2>
+      <p>There is definitely nothing important behind this door.</p>
+      <button class="btn" style="background:#ffe66d;font-size:18px" onclick="go('s2')">OPEN THE DOOR 🚪</button>
+    </div>
+    <p class="pixel small">DON'T TRUST THE 🤓</p>
+  </div>
+</section>
+
+<!-- LAYER 2: 12 QUESTIONS -->
+<section id="s2" class="screen">
+  <span class="lantern left">🏮</span><span class="lantern right">🏮</span>
+  <div class="wrap">
+    <div class="pixel small">SECRET LEVEL 02 · 秘密关卡</div>
+    <h1>THE LANGUAGE TRIAL 📚</h1>
+    <p>12 questions. English + 中文. Get ALL 12 correct to unlock the next layer. One mistake means starting again. Good luck, scholar 🤓</p>
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <strong id="qCounter">Question 1 / 12</strong>
+        <strong id="score">Score: 0</strong>
+      </div>
+      <div class="progress" style="margin-top:10px"><div id="bar"></div></div>
+      <div id="quiz">
+        <div class="quizQ" id="question"></div>
+        <div class="answers" id="answers"></div>
+        <p id="feedback" aria-live="polite"></p>
+      </div>
+      <div id="retryArea" style="display:none;text-align:center">
+        <h2>💀 ACADEMIC DISASTER</h2>
+        <p>One wrong answer. The council of 🤓 has rejected your application.</p>
+        <button class="btn" style="background:#ff9bcf" onclick="startQuiz()">RETAKE ALL 12 ↻</button>
+      </div>
+      <div id="passArea" style="display:none;text-align:center">
+        <h2>🏆 SCHOLAR STATUS: UNLOCKED</h2>
+        <p>12/12. 你太厉害了！ You actually did it!</p>
+        <div style="font-size:48px">🎊 🏮 🎊</div>
+        <button class="btn" style="background:#ffe66d" onclick="go('s3')">UNLOCK THE NEXT SECRET ➜</button>
+      </div>
+    </div>
+    <p class="stamp">TOP SECRET</p>
+  </div>
+</section>
+
+<!-- LAYER 3: THE FLASHING HEART -->
+<section id="s3" class="screen">
+  <span class="lantern left">🏮</span><span class="lantern right">🏮</span>
+  <div class="wrap" style="padding-top:10vh">
+    <div class="pixel small">LEVEL 03 · 心动检测中</div>
+    <h2>Wait... what is that?</h2>
+    <div class="heart heartGlow"></div>
+    <p id="heartText" class="pixel small">UNAUTHORIZED HEART DETECTED</p>
+    <p class="muted">This secret will disappear in...</p>
+    <div id="countdown" class="pixel" style="font-size:35px;color:#ff8abf">3</div>
+    <p class="small">Did u see that? No? Skill issue.</p>
+  </div>
+</section>
+
+<!-- LAYER 4: THE BOSS -->
+<section id="s4" class="screen">
+  <div class="wrap" style="padding-top:5vh">
+    <div class="pixel small">FINAL BOSS · 最终关卡</div>
+    <h1>THE DATING SIMULATOR</h1>
+    <p>Warning: boss has unlimited 🤓 energy.</p>
+    <div class="bossPanel">
+      <div id="boss">🤓</div>
+      <div id="angry">😡</div>
+      <h2 id="bossLine">DO U LOVE ME?</h2>
+      <p id="bossSub">Choose wisely. The council is watching.</p>
+      <div class="btnrow" id="bossButtons">
+        <button class="btn" style="background:#aaffc7;font-size:20px;min-width:120px" onclick="sayYes()">YES 💖</button>
+        <button class="btn" id="noBtn" onclick="sayNo()">NO 💀</button>
+      </div>
+    </div>
+    <p class="pixel small" style="margin-top:35px">THERE IS NO ESCAPE 🤓</p>
+  </div>
+</section>
+
+<!-- FINAL LAYER: CONFESSION -->
+<section id="s5" class="screen">
+  <div class="wrap" style="padding-top:10vh">
+    <div class="pixel small" style="color:#ff8cbd">FINAL FILE · 机密档案</div>
+    <div style="margin:35px 0">
+      <span class="pixelLantern">🏮</span>
+      <span class="pixelLantern" style="animation-delay:.3s">🏮</span>
+      <span class="pixelLantern" style="animation-delay:.6s">🏮</span>
+    </div>
+    <div class="pixel small" style="color:#ffe6a5">ALL JOKES ASIDE...</div>
+    <h1 id="finalMessage">I love thee with so much of my heart that none is left to protest</h1>
+    <div style="margin:30px auto;width:120px;height:3px;background:linear-gradient(90deg,transparent,#ff8cbd,#ffe6a5,transparent)"></div>
+    <p style="color:#f9cde3;font-size:18px;line-height:1.9">
+      After all the nonsense, all the 🤓, and all the ridiculous levels...
+      <br><br>
+      <span style="color:#ffe6a5">This part is actually real.</span>
+    </p>
+    <div style="font-size:36px;margin:25px">💗 ✦ 💗</div>
+    <p class="pixel small" style="color:#b5a8ff">END OF TRANSMISSION</p>
+  </div>
+  <div class="luvOrbit">luv the🤓</div>
+  <div class="luvOrbit" style="animation-delay:-1.6s;color:#ffe6a5">luv the🤓</div>
+  <div class="luvOrbit" style="animation-delay:-3.2s;color:#75edff">luv the🤓</div>
+</section>
+
+<div id="toast" role="status"></div>
 
 <script>
-/* SETTINGS */
-var settings = {
-  particles: {
-    length: 1500,
-    duration: 2,
-    velocity: 120,
-    effect: -1.2,
-    size: 22
-  }
-};
+const $ = id => document.getElementById(id);
+let toastTimer;
 
-/* REQUEST ANIMATION FRAME */
-(function () {
-  var lastTime = 0;
-  var vendors = ['ms', 'moz', 'webkit', 'o'];
-  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-  }
-  window.requestAnimationFrame = window.requestAnimationFrame ||
-    function (callback) {
-      var currTime = new Date().getTime();
-      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = window.setTimeout(function () { callback(currTime + timeToCall); }, timeToCall);
-      lastTime = currTime + timeToCall;
-      return id;
-    };
-})();
-
-/* POINT */
-function Point(x, y) {
-  this.x = x || 0;
-  this.y = y || 0;
+function toast(message) {
+  const t = $('toast');
+  t.textContent = message;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.style.display = 'none', 2500);
 }
-Point.prototype.clone = function () {
-  return new Point(this.x, this.y);
-};
-Point.prototype.length = function (l) {
-  if (!l) return Math.sqrt(this.x * this.x + this.y * this.y);
-  this.normalize();
-  this.x *= l;
-  this.y *= l;
-  return this;
-};
-Point.prototype.normalize = function () {
-  var l = this.length();
-  this.x /= l;
-  this.y /= l;
-  return this;
-};
 
-/* PARTICLE */
-function Particle() {
-  this.position = new Point();
-  this.velocity = new Point();
-  this.acceleration = new Point();
-  this.age = 0;
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if (id === 's2') startQuiz();
+  if (id === 's3') runHeart();
+  if (id === 's5') startFinalEffects();
 }
-Particle.prototype.initialize = function (x, y, dx, dy) {
-  this.position.x = x;
-  this.position.y = y;
-  this.velocity.x = dx;
-  this.velocity.y = dy;
-  this.acceleration.x = dx * settings.particles.effect;
-  this.acceleration.y = dy * settings.particles.effect;
-  this.age = 0;
-};
-Particle.prototype.update = function (dt) {
-  this.position.x += this.velocity.x * dt;
-  this.position.y += this.velocity.y * dt;
-  this.velocity.x += this.acceleration.x * dt;
-  this.velocity.y += this.acceleration.y * dt;
-  this.age += dt;
-};
-Particle.prototype.draw = function (ctx, img) {
-  var size = img.width;
-  ctx.globalAlpha = 1 - this.age / settings.particles.duration;
-  ctx.drawImage(img, this.position.x - size / 2, this.position.y - size / 2);
-};
 
-/* PARTICLE POOL */
-function ParticlePool(length) {
-  this.particles = new Array(length);
-  for (var i = 0; i < length; i++) this.particles[i] = new Particle();
-  this.firstActive = 0;
-  this.firstFree = 0;
-  this.duration = settings.particles.duration;
+function confetti(count=45) {
+  const symbols = ['🤓','💗','✨','⭐','🏮','🎉','🫵🏼','💖','🎊'];
+  for (let i=0; i<count; i++) {
+    const e = document.createElement('div');
+    e.className = 'emojiRain';
+    e.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    e.style.left = Math.random()*100+'vw';
+    e.style.top = (-10-Math.random()*50)+'px';
+    e.style.fontSize = (18+Math.random()*28)+'px';
+    e.style.animationDuration = (2+Math.random()*3)+'s';
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 5200);
+  }
 }
-ParticlePool.prototype.add = function (x, y, dx, dy) {
-  this.particles[this.firstFree].initialize(x, y, dx, dy);
-  this.firstFree = (this.firstFree + 1) % this.particles.length;
-  if (this.firstActive === this.firstFree)
-    this.firstActive = (this.firstActive + 1) % this.particles.length;
-};
-ParticlePool.prototype.update = function (dt) {
-  while (this.particles[this.firstActive].age >= this.duration &&
-         this.firstActive !== this.firstFree) {
-    this.firstActive = (this.firstActive + 1) % this.particles.length;
-  }
-  for (var i = this.firstActive; i !== this.firstFree; i = (i + 1) % this.particles.length) {
-    this.particles[i].update(dt);
-  }
-};
-ParticlePool.prototype.draw = function (ctx, img) {
-  for (var i = this.firstActive; i !== this.firstFree; i = (i + 1) % this.particles.length) {
-    this.particles[i].draw(ctx, img);
-  }
-};
 
-/* MAIN */
-(function (canvas) {
-  var ctx = canvas.getContext("2d");
-  var pool = new ParticlePool(settings.particles.length);
-  var rate = settings.particles.length / settings.particles.duration;
-  var time;
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.onresize = resize;
-  resize();
-
-  /* EMOJI IMAGE */
-  var emojiImage = (function () {
-    var c = document.createElement("canvas");
-    var cctx = c.getContext("2d");
-    c.width = settings.particles.size * 2;
-    c.height = settings.particles.size * 2;
-    cctx.font = settings.particles.size * 2 + "px serif";
-    cctx.textAlign = "center";
-    cctx.textBaseline = "middle";
-    cctx.fillText("😜", c.width / 2, c.height / 2);
-    var img = new Image();
-    img.src = c.toDataURL();
-    return img;
-  })();
-
-  function render() {
-    requestAnimationFrame(render);
-    var now = new Date().getTime() / 1000;
-    var dt = now - (time || now);
-    time = now;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    var amount = rate * dt;
-    for (var i = 0; i < amount; i++) {
-      var angle = Math.random() * Math.PI * 2;
-      var pos = new Point(Math.cos(angle), Math.sin(angle)).length(10);
-      var dir = pos.clone().length(settings.particles.velocity);
-      pool.add(
-        canvas.width / 2 + pos.x,
-        canvas.height / 2 + pos.y,
-        dir.x,
-        dir.y
-      );
+function scan() {
+  $('scanText').textContent = 'Scanning u...';
+  $('scanResult').textContent = 'Analysing suspicious behaviour...';
+  $('scanBar').style.width = '0';
+  let n=0;
+  const timer=setInterval(()=>{
+    n+=10;
+    $('scanBar').style.width=n+'%';
+    if(n>=100){
+      clearInterval(timer);
+      $('scanText').textContent='🤓 CERTIFIED';
+      $('scanResult').textContent='Diagnosis: 100% silly, 200% suspicious.';
+      confetti(12);
     }
+  },100);
+}
+scan();
 
-    pool.update(dt);
-    pool.draw(ctx, emojiImage);
+// Quiz: 12 questions, restart the entire quiz on any mistake.
+const questions = [
+  {q:'What does 你好 (nǐ hǎo) mean?',a:['Hello','Goodbye','Thank you','Sorry'],c:0},
+  {q:'What does 谢谢 (xièxie) mean?',a:['Please','Thank you','Good night','Friend'],c:1},
+  {q:'Choose the correct Chinese for “cat”.',a:['狗','书','猫','水'],c:2},
+  {q:'What does 再见 (zàijiàn) mean?',a:['Goodbye','Welcome','Sorry','Good morning'],c:0},
+  {q:'What is the opposite of “ancient”?',a:['Historic','Modern','Old','Past'],c:1},
+  {q:'Choose the correct sentence.',a:['She go to school.','She going school.','She goes to school.','She gone school.'],c:2},
+  {q:'What does 我爱你 (wǒ ài nǐ) mean?',a:['I miss you','I love you','I know you','I see you'],c:1},
+  {q:'Which word means “water” in Chinese?',a:['火','天','水','山'],c:2},
+  {q:'Choose a synonym for “brave”.',a:['Cowardly','Courageous','Lazy','Quiet'],c:1},
+  {q:'What does 朋友 (péngyou) mean?',a:['Teacher','Student','Friend','Family'],c:2},
+  {q:'Choose the correct past tense.',a:['I see him yesterday.','I saw him yesterday.','I seen him yesterday.','I seeing him yesterday.'],c:1},
+  {q:'What does 加油 (jiāyóu) commonly mean?',a:['Give up','Goodbye forever','Keep it up / You can do it!','I am hungry'],c:2}
+];
+
+let qi=0, score=0, quizLocked=false;
+
+function startQuiz() {
+  qi=0; score=0; quizLocked=false;
+  $('score').textContent='Score: 0';
+  $('quiz').style.display='block';
+  $('retryArea').style.display='none';
+  $('passArea').style.display='none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const item=questions[qi];
+  $('qCounter').textContent=`Question ${qi+1} / ${questions.length}`;
+  $('bar').style.width=(qi/questions.length*100)+'%';
+  $('question').textContent=item.q;
+  $('feedback').textContent='';
+  const area=$('answers');
+  area.innerHTML='';
+  item.a.forEach((answer,i)=>{
+    const b=document.createElement('button');
+    b.className='answer';
+    b.textContent=answer;
+    b.onclick=()=>answerQuestion(i,b);
+    area.appendChild(b);
+  });
+}
+
+function answerQuestion(index,button) {
+  if(quizLocked) return;
+  const item=questions[qi];
+  if(index!==item.c) {
+    quizLocked=true;
+    button.classList.add('wrong');
+    $('feedback').textContent='❌ WRONG! Back to the beginning, scholar 😂';
+    document.querySelector('.panel').style.animation='shake .25s';
+    setTimeout(()=>document.querySelector('.panel').style.animation='',300);
+    setTimeout(()=>{
+      $('quiz').style.display='none';
+      $('retryArea').style.display='block';
+      $('bar').style.width='0';
+    },700);
+    return;
   }
 
-  render();
-})(document.getElementById("pinkboard"));
-</script>
+  button.classList.add('correct');
+  score++;
+  $('score').textContent='Score: '+score;
+  $('feedback').textContent='✅ CORRECT! +100000 social credits 😂🤓';
+  confetti(8);
+  quizLocked=true;
+  setTimeout(()=>{
+    qi++;
+    quizLocked=false;
+    if(qi===questions.length) {
+      $('quiz').style.display='none';
+      $('bar').style.width='100%';
+      $('passArea').style.display='block';
+      confetti(45);
+    } else renderQuestion();
+  },550);
+}
 
+// Heart flashes briefly, then moves automatically to the boss.
+let heartTimer;
+function runHeart() {
+  clearInterval(heartTimer);
+  let n=3;
+  $('countdown').textContent=n;
+  $('heartText').textContent='UNAUTHORIZED HEART DETECTED';
+  $('s3').style.display='block';
+  heartTimer=setInterval(()=>{
+    n--;
+    $('countdown').textContent=n;
+    if(n<=0) {
+      clearInterval(heartTimer);
+      $('heartText').textContent='HEART DATA DELETED 💨';
+      $('s3').style.transition='opacity .35s';
+      $('s3').style.opacity='0';
+      setTimeout(()=>{
+        $('s3').style.opacity='1';
+        go('s4');
+      },400);
+    }
+  },850);
+}
+
+// Boss: a NO click causes the angry reaction; after that, YES is the only choice.
+let noClicked=false;
+function sayNo() {
+  $('angry').style.display='block';
+  $('boss').style.display='none';
+  $('bossLine').textContent='EXCUSE ME??? 😡';
+  $('bossSub').textContent='The council is deeply disappointed in u.';
+  $('noBtn').textContent='I SAID YES 😭';
+  $('noBtn').style.background='#ff7777';
+  $('noBtn').onclick=()=>{
+    toast('The council has already rejected this option. 🤓');
+    $('noBtn').style.display='none';
+  };
+  noClicked=true;
+  document.querySelector('.bossPanel').style.animation='shake .3s';
+  setTimeout(()=>document.querySelector('.bossPanel').style.animation='',350);
+  confetti(15);
+}
+
+function sayYes() {
+  $('bossLine').textContent='ACCEPTED 🤝';
+  $('bossSub').textContent='Relationship protocol unlocked.';
+  $('bossButtons').innerHTML='<button class="btn" style="background:#ffe66d" onclick="go(\\'s5\\')">UNLOCK FINAL FILE 💌</button>';
+  $('boss').style.display='inline-block';
+  $('angry').style.display='none';
+  confetti(35);
+}
+
+// Final scene effects.
+let finalStarted=false;
+function startFinalEffects() {
+  if(finalStarted) return;
+  finalStarted=true;
+  confetti(70);
+  setInterval(()=>{
+    if(!$('s5').classList.contains('active')) return;
+    const e=document.createElement('div');
+    e.textContent=['✨','💗','⭐','🏮'][Math.floor(Math.random()*4)];
+    e.style.cssText=`position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;pointer-events:none;opacity:.8;font-size:${14+Math.random()*20}px;animation:flash ${1+Math.random()*2}s infinite;z-index:1`;
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),3500);
+  },250);
+}
+</script>
 </body>
 </html>
+```
+
